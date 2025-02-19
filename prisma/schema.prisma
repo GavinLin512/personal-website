@@ -17,6 +17,8 @@ model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String?
+  role  String  @default("user")
+  password String?
   posts Post[]
 }
 
