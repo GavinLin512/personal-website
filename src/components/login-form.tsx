@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import LoginSideImg from "../../public/login-side-img.png"
+import Image from 'next/image'
+import Link from "next/link"
 
 export function LoginForm({
   className,
@@ -21,7 +24,7 @@ export function LoginForm({
                 </p>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">請輸入帳號</Label>
                 <Input
                   id="email"
                   type="email"
@@ -31,12 +34,12 @@ export function LoginForm({
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">密碼</Label>
                   <a
                     href="#"
                     className="ml-auto text-sm underline-offset-2 hover:underline"
                   >
-                    Forgot your password?
+                    忘記密碼?
                   </a>
                 </div>
                 <Input id="password" type="password" required />
@@ -46,7 +49,7 @@ export function LoginForm({
               </Button>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                 <span className="relative z-10 bg-background px-2 text-muted-foreground">
-                  Or continue with
+                  或者使用第三方登入
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-4">
@@ -79,26 +82,25 @@ export function LoginForm({
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <a href="#" className="underline underline-offset-4">
-                  Sign up
-                </a>
+                沒有帳號嗎?{" "}
+                <Link href="/admin/sign-up" className="underline underline-offset-4">前往註冊</Link>
               </div>
             </div>
           </form>
           <div className="relative hidden bg-muted md:block">
-            <img
-              src="/placeholder.svg"
+            <Image src={LoginSideImg} alt="Image" className="absolute inset-0 h-full w-full object-cover" />
+            {/* <img
+              src={LoginSideImg}
               alt="Image"
               className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-            />
+            /> */}
           </div>
         </CardContent>
       </Card>
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
+      {/* <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
-      </div>
+      </div> */}
     </div>
   )
 }
