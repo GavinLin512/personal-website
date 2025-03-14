@@ -1,29 +1,18 @@
 /*
   Warnings:
 
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
+  - Added the required column `emailVerified` to the `user` table without a default value. This is not possible if the table is not empty.
+  - Made the column `name` on table `user` required. This step will fail if there are existing NULL values in that column.
 
 */
--- DropForeignKey
-ALTER TABLE "Post" DROP CONSTRAINT "Post_authorId_fkey";
-
--- DropTable
-DROP TABLE "User";
-
--- CreateTable
-CREATE TABLE "user" (
-    "id" SERIAL NOT NULL,
-    "email" TEXT NOT NULL,
-    "name" TEXT,
-    "role" TEXT NOT NULL DEFAULT 'user',
-    "password" TEXT,
-    "emailVerified" BOOLEAN NOT NULL,
-    "image" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
-);
+-- AlterTable
+ALTER TABLE "user" ADD COLUMN     "banExpires" TIMESTAMP(3),
+ADD COLUMN     "banReason" TEXT,
+ADD COLUMN     "banned" BOOLEAN,
+ADD COLUMN     "emailVerified" BOOLEAN NOT NULL,
+ADD COLUMN     "image" TEXT,
+ADD COLUMN     "role" TEXT,
+ALTER COLUMN "name" SET NOT NULL;
 
 -- CreateTable
 CREATE TABLE "session" (
@@ -35,6 +24,7 @@ CREATE TABLE "session" (
     "ipAddress" TEXT,
     "userAgent" TEXT,
     "userId" INTEGER NOT NULL,
+    "impersonatedBy" TEXT,
 
     CONSTRAINT "session_pkey" PRIMARY KEY ("id")
 );
@@ -71,13 +61,7 @@ CREATE TABLE "verification" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
-
--- CreateIndex
 CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
-
--- AddForeignKey
-ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
