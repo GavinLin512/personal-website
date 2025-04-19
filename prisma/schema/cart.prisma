@@ -1,0 +1,13 @@
+model CartItem {
+  id        String   @id @default(cuid())
+  quantity  Int      @default(1) // 該產品在購物車中的數量
+  userId    String    // 擁有該購物車的用戶 ID
+  productId String    // 關聯的產品
+  variantId String?   // 產品變體的 ID（可選）
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) // 關聯的用戶，當用戶被刪除時，其購物車項目也會被刪除
+
+  @@unique([userId, productId, variantId]) // 確保同一用戶不會在購物車中有重複的產品和變體組合
+}

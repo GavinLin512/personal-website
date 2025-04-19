@@ -1,0 +1,14 @@
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int       // 評分（通常是 1-5 顆星）
+  title     String?   // 評論標題
+  content   String?   // 評論內容
+  userId    String    // 評論者的用戶 ID
+  productId String    // 被評論產品的 ID
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id]) // 關聯的產品
+  user      User     @relation(fields: [userId], references: [id]) // 關聯的用戶
+
+  @@unique([userId, productId]) // 確保每個用戶只能對一個產品發表一次評論
+}

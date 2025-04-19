@@ -1,0 +1,12 @@
+model Category {
+  id            String     @id @default(cuid())
+  name          String      // 類別名稱
+  slug          String     @unique // URL 友好的唯一標識符
+  description   String?     // 類別描述
+  image         String?     // 類別圖片 URL
+  level         Int         // 類別層數
+  parentId      String?     // 父類別的 ID，用於創建多層類別結構
+  parent        Category?  @relation("CategoryToSubcategory", fields: [parentId], references: [id]) // 父類別關聯
+  subcategories Category[] @relation("CategoryToSubcategory") // 該類別的子類別列表，建立遞歸關係
+  products      Product[]  // 屬於該類別的所有產品
+}

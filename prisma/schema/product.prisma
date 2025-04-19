@@ -1,0 +1,46 @@
+model Product {
+  id            String             @id @default(cuid())
+  name          String              // 產品名稱
+  slug          String             @unique // URL 友好的唯一識別字串，用於生成產品頁面的路徑
+  description   String?             // 產品詳細描述
+  price         Float               // 產品原價
+  salePrice     Float?              // 促銷價格（可選）
+  stock         Int                @default(0) // 庫存數量，預設為 0
+  sku           String?            @unique // 庫存單元編號，通常用於庫存管理，必須唯一
+  brand         String?             // 產品品牌
+  images        String[]            // 產品圖片的 URL 陣列
+  featured      Boolean            @default(false) // 是否為推薦產品，用於首頁展示
+  published     Boolean            @default(true) // 產品是否已發布上架
+  categoryId    String?             // 產品所屬類別的外鍵
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  cartItems     CartItem[]          // 哪些購物車包含這個產品
+  orderItems    OrderItem[]         // 哪些訂單包含這個產品
+  category      Category?          @relation(fields: [categoryId], references: [id]) // 產品所屬類別的關聯
+  attributes    ProductAttribute[] // 產品的特性/屬性列表
+  variants      ProductVariant[]   // 產品的不同變體（如不同顏色、尺寸等）
+  reviews       Review[]           // 產品評論
+  wishlistItems WishlistItem[]     // 哪些用戶收藏了這個產品
+}
+
+model ProductAttribute {
+  id        String  @id @default(cuid())
+  name      String  // 屬性名稱（如「顏色」、「尺寸」、「材質」）
+  value     String  // 屬性值（如「紅色」、「XL」、「棉」）
+  productId String  // 關聯產品的外鍵
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade) // 關聯產品的外鍵，當產品被刪除時，相關屬性也會被刪除
+
+  @@unique([productId, name, value]) // 確保同一產品不會有重複的屬性名稱和值組合
+}
+
+model ProductVariant {
+  id         String  @id @default(cuid())
+  sku        String  @unique // 變體的庫存單元編號，必須唯一
+  price      Float    // 該變體的價格（可能與主產品價格不同）
+  salePrice  Float?   // 該變體的促銷價格
+  stock      Int     @default(0) // 該變體的庫存
+  attributes Json    //  JSON 格式的屬性組合，如 {"顏色":"紅色", "尺寸":"XL"}
+  image      String? // 該變體的特定圖片
+  productId  String  // 關聯主產品的外鍵
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade) // 關聯到的主產品，當主產品被刪除時，所有變體也會被刪除
+}

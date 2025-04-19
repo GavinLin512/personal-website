@@ -1,0 +1,10 @@
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String    // 擁有該收藏項目的用戶 ID
+  productId String    // 關聯的用戶
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id]) //  關聯的產品
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade) // 關聯的用戶，當用戶被刪除時，其收藏項目也會被刪除
+
+  @@unique([userId, productId]) // 確保用戶不會重複收藏同一產品
+}
